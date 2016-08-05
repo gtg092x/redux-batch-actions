@@ -7,7 +7,7 @@ Batch [Redux][] actions.
 
 ## Installation
 
-    % npm install redux-batch-middleware
+    % npm install redux-batch-actions
 
 ## Usage
 
@@ -42,7 +42,7 @@ store.dispatch({
 
 ### Merge
 
-By default, batch-middleware merges your data objects into a single action.
+By default, batch-actions merges your data objects into a single action.
 
 If you want to customize this, include it as a configuration with your middleware.
 

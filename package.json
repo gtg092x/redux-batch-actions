@@ -1,8 +1,8 @@
 {
   "name": "redux-batch-action",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Batch Redux Actions.",
-  "main": "lib/batch-middleware.js",
+  "main": "lib/batch-actions.js",
   "scripts": {
     "test": "./node_modules/.bin/cross-env BABEL_ENV=commonjs ./node_modules/.bin/mocha --compilers js:babel-register --recursive",
     "compile": "./node_modules/.bin/babel --source-maps inline --optional runtime -d lib/ src/",
@@ -28,17 +28,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/gtg092x/batch-middleware.git"
+    "url": "git://github.com/gtg092x/redux-batch-actions.git"
   },
   "keywords": [
     "redux",
-    "batch-middleware",
+    "batch-actions",
     "reducers"
   ],
   "author": "Matthew Drake <mdrake@mediadrake.com> (https://github.com/gtg092x)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gtg092x/batch-middleware/issues"
+    "url": "https://github.com/gtg092x/redux-batch-actions/issues"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",

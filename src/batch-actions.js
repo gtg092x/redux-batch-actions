@@ -53,8 +53,6 @@ function config({tick = getDefaultTick(), ...options} = {}) {
           !toTick && (tick(onTick) || (toTick = true));
           return;
         }
-        // This will likely be the action itself, unless
-        // a middleware further in chain changed it.
         return next(action);
       }
     };

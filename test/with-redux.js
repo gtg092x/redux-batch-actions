@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import reducify from 'reducify';
 import chai from 'chai';
-import batchMiddleware from '../src/batch-middleware';
+import batchMiddleware from '../src/batch-actions';
 import _ from 'lodash';
 
 const {assert} = chai;
