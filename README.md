@@ -1,8 +1,8 @@
-# Redux Batch Middleware [![Build Status](https://travis-ci.org/gtg092x/redux-batch-middleware.svg?branch=master)](https://travis-ci.org/gtg092x/redux-batch-middleware)
+# Redux Batch Middleware [![Build Status](https://travis-ci.org/gtg092x/redux-batch-actions.svg?branch=master)](https://travis-ci.org/gtg092x/redux-batch-actions)
 
 Batch [Redux][] actions.
 
-[![NPM](https://nodei.co/npm/redux-batch-middleware.png?downloads=true&stars=true)](https://nodei.co/npm/redux-batch-middleware/)
+[![NPM](https://nodei.co/npm/redux-batch-actions.png?downloads=true&stars=true)](https://nodei.co/npm/redux-batch-actions/)
 
 
 ## Installation
