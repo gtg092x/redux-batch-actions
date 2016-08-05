@@ -178,7 +178,6 @@ const store = createStore(
 );
 ```
 
-
 ## Credits
 
 Redux Batch Middleware is free software under the MIT license. It was created in sunny Santa Monica by [Matthew Drake][].
