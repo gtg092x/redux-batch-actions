@@ -162,6 +162,43 @@ store.dispatch({
 // Action is: {type: 'GRAPH', myProp: {foo: 'bar', fuz: 'bus'}}
 ```
 
+### Batch Complete
+
+Want to ensure the batch fires synchronously? You'll need to dispatch the batched action with one additional property: `batchComplete`.
+
+```js
+import { createStore } from 'redux';
+import reducify from 'reducify';
+
+
+const store = createStore(
+  reducify({
+    "GRAPH": (state = 0, action) => action.data
+  }),
+  {},
+  applyMiddleware(batchMiddleware({
+    "GRAPH": true
+  }))
+);
+
+store.dispatch({
+   type: 'GRAPH',
+   data: {foo: 'bar'}   
+});
+
+store.dispatch({
+   type: 'GRAPH',
+   data: {fuz: 'bus'}
+});
+
+store.dispatch({
+   type: 'GRAPH',
+   batchComplete: true
+});
+
+// Action is: {type: 'GRAPH', data: {foo: 'bar', fuz: 'bus'}}
+```
+
 ### Configuration
  
 This batching relies on a tick function, that is - any function that we know will fire next time there is a javascript event loop.  

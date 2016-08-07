@@ -61,6 +61,46 @@ export default function () {
 
     });
 
+    it('works with complete signals', function () {
+
+      const store = createStore(reducify(
+        {
+          "GRAPH": (state, action) => action.data
+        }
+        ), {},
+        applyMiddleware(batchMiddleware({
+          "GRAPH": true
+        }))
+      );
+
+      const expectedStates = [
+        {fa: 'bar', foo: 'buz'}
+      ];
+
+      store.subscribe(() => {
+        const state = store.getState();
+        assert.deepEqual(state, expectedStates.shift());
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        data: {fa: 'bar'}
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        data: {foo: 'buz'}
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        batchComplete: true
+      });
+
+
+
+    });
+
 
     it('work with a custom merger', function (done) {
 
