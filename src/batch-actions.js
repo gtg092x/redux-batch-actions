@@ -32,7 +32,7 @@ function config({tick: tickArg = getDefaultTick(), ...options} = {}) {
           const batcher = _.isPlainObject($$batcher) ? $$batcher :
             _.isFunction($$batcher) ? {merge: $$batcher} : {};
           const {merge = defaultMerge, _: mergeAlias, ...config} = batcher;
-          return mergeAlias || merge(pointer, action);
+          return mergeAlias || merge(pointer, action, store.getState());
         }, {});
 
         queue[type] = [];
