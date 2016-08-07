@@ -51,16 +51,20 @@ function config({tick: tickArg = getDefaultTick(), ...options} = {}) {
         const actionType = action.type;
         const $$batcher = action.batch || options[actionType];
 
-        const $$batchComplete = action.batchComplete;
-        if ($$batchComplete) {
-          completeType(actionType);
-          return;
-        }
+
 
         if($$batcher && !action.$$combined) {
           queue[actionType] = queue[actionType] || [];
           queue[actionType].push({$$batcher, action});
-          !toTick && (tick(onTick) || (toTick = true));
+
+          const $$batchComplete = action.batchComplete;
+          if ($$batchComplete) {
+            completeType(actionType);
+            return;
+          } else {
+            !toTick && (tick(onTick) || (toTick = true))
+          }
+
           return;
         }
         return next(action);

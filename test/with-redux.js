@@ -65,7 +65,7 @@ export default function () {
 
       const store = createStore(reducify(
         {
-          "GRAPH": (state, action) => action.data
+          "GRAPH": (state, action) => ({...action.data, ...(action.param || {})})
         }
         ), {},
         applyMiddleware(batchMiddleware({
@@ -74,7 +74,7 @@ export default function () {
       );
 
       const expectedStates = [
-        {fa: 'bar', foo: 'buz'}
+        {fa: 'bar', foo: 'buz', fun: 'bas', data: 1}
       ];
 
       store.subscribe(() => {
@@ -94,6 +94,8 @@ export default function () {
 
       store.dispatch({
         type: 'GRAPH',
+        data: {fun: 'bas'},
+        param: {data : 1},
         batchComplete: true
       });
 
