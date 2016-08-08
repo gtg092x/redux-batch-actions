@@ -1,6 +1,6 @@
 {
   "name": "redux-batch-actions",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Batch Redux Actions.",
   "main": "lib/batch-actions.js",
   "scripts": {

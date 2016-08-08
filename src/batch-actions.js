@@ -15,7 +15,7 @@ function getDefaultTick() {
   return typeof window === 'undefined' ? process.nextTick : _.partialRight(setTimeout, 1);
 }
 
-function config({tick: tickArg = getDefaultTick(), ...options} = {}) {
+function config({tick: tickArg = getDefaultTick(), finalize = _.identity, ...options} = {}) {
   const tick = tickArg === null ? _.noop : tickArg;
   return (store) => {
     return (next) => {
@@ -37,7 +37,7 @@ function config({tick: tickArg = getDefaultTick(), ...options} = {}) {
 
         queue[type] = [];
 
-        const toDispatch = {...combinedAction, $$combined: true};
+        const toDispatch = finalize({...combinedAction, $$combined: true});
         toTick = false;
         store.dispatch(toDispatch);
       };
