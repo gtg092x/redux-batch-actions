@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-function defaultMerge(pointer, action) {
+function defaultMerge(pointer = {}, action) {
   return {
     ...pointer,
     ...action,
@@ -22,7 +22,7 @@ function config({tick: tickArg = getDefaultTick(), finalize = _.identity, ...opt
       let queue = {};
       let toTick = false;
 
-      const completeType = type => {
+      const completeType = (type, toFinalize = finalize) => {
         const toBatch = queue[type];
         if (_.size(toBatch) === 0) {
           return;
@@ -31,19 +31,19 @@ function config({tick: tickArg = getDefaultTick(), finalize = _.identity, ...opt
         const combinedAction = toBatch.reduce((pointer, {action, $$batcher}) => {
           const batcher = _.isPlainObject($$batcher) ? $$batcher :
             _.isFunction($$batcher) ? {merge: $$batcher} : {};
-          const {merge = defaultMerge, _: mergeAlias, ...config} = batcher;
-          return mergeAlias || merge(pointer, action, store.getState());
+          const {merge = defaultMerge, _: mergeAlias, reduce: mergeAlias2, ...config} = batcher;
+          return (mergeAlias2 || mergeAlias || merge)(pointer, action, store.getState());
         }, {});
 
         queue[type] = [];
 
-        const toDispatch = finalize({...combinedAction, $$combined: true});
+        const toDispatch = toFinalize({...combinedAction, $$combined: true});
         toTick = false;
         store.dispatch(toDispatch);
       };
 
       const onTick = () => {
-        Object.keys(queue).forEach(completeType);
+        Object.keys(queue).forEach(item => completeType(item));
       };
 
       return (action) => {
@@ -51,21 +51,27 @@ function config({tick: tickArg = getDefaultTick(), finalize = _.identity, ...opt
         const actionType = action.type;
         const $$batcher = action.batch || options[actionType];
 
-
-
         if($$batcher && !action.$$combined) {
           queue[actionType] = queue[actionType] || [];
           queue[actionType].push({$$batcher, action});
 
+          if (action.batchPurge) {
+            queue[actionType] = [];
+            return;
+          }
+
           const $$batchComplete = action.batchComplete;
           if ($$batchComplete) {
-            completeType(actionType);
+            const finalizeArg = _.isFunction($$batchComplete) ? $$batchComplete : finalize;
+            completeType(actionType, finalizeArg);
             return;
           } else {
             !toTick && (tick(onTick) || (toTick = true))
           }
 
           return;
+        } else if ($$batcher) {
+          return next(_.omit(action, ['batchComplete', '$$combined']));
         }
         return next(action);
       }

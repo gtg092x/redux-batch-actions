@@ -200,6 +200,8 @@ store.dispatch({
 ```
 
 ### Configuration
+
+#### Tick
  
 This batching relies on a tick function, that is - any function that we know will fire next time there is a javascript event loop.  
 
@@ -207,12 +209,57 @@ By default, we use `setTimeout([fn], 1)` on the browser and `process.nextTick([f
  
 ```js
 const store = createStore(
-  reducify({
-    "GRAPH": (state = 0, action) => action.data
-  }),
+  reducify({}),
   {},
   applyMiddleware(batchMiddleware({tick: requestAnimationFrame}))
 );
+```
+
+#### Finalize
+ 
+Once a batch is going to be committed, we'll run it through a finalize function. This defaults to `_.identity`.  
+ 
+```js
+const store = createStore(
+  reducify({}),
+  {},
+  applyMiddleware(batchMiddleware({finalize: action => {...action, hi: 'mom'}}))
+);
+
+store.dispatch({
+   type: 'GRAPH',
+   batch: true,
+   data: {fuz: 'bus'}
+});
+
+
+// on next tick:
+// Action is: {type: 'GRAPH', data: {fuz: 'bus'}, hi: 'mom'}
+```
+
+If you pass a function to `batchComplete`, it will be used to finalize. 
+ 
+```js
+const store = createStore(
+  reducify({}),
+  {},
+  applyMiddleware(batchMiddleware())
+);
+
+store.dispatch({
+   type: 'GRAPH',
+   batch: true,
+   data: {fuz: 'bus'}
+});
+
+
+store.dispatch({
+   type: 'GRAPH',
+   batchComplete: action => {...action, hi: 'mom'}
+});
+
+
+// Action is: {type: 'GRAPH', data: {fuz: 'bus'}, hi: 'mom'}
 ```
 
 ## Credits

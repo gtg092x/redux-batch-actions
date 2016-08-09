@@ -99,8 +99,39 @@ export default function () {
         batchComplete: true
       });
 
+    });
 
+    it('works with purge signals', function (done) {
 
+      const store = createStore(reducify(
+        {
+          "GRAPH": (state, action) => ({...action.data})
+        }
+        ), {},
+        applyMiddleware(batchMiddleware({
+          "GRAPH": true
+        }))
+      );
+
+      store.subscribe(() => {
+        assert.fail();
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        data: {fa: 'bar'}
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        data: {foo: 'buz'}
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        batchPurge: true
+      });
+      setTimeout(done, 2);
     });
 
 
@@ -247,6 +278,85 @@ export default function () {
 
 
     });
+
+    it('works with custom finalize', function () {
+
+      const store = createStore(reducify(
+        {
+          "GRAPH": (state, action) => ({...action.data})
+        }
+        ), {},
+        applyMiddleware(batchMiddleware({
+          "GRAPH": true,
+          finalize: state => ({...state, data: {...state.data, hi: 'mom'}})
+        }))
+      );
+
+      const expectedStates = [
+        {fa: 'bar', foo: 'buz', fun: 'bas', hi: 'mom'}
+      ];
+
+      store.subscribe(() => {
+        const state = store.getState();
+        assert.deepEqual(state, expectedStates.shift());
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        data: {fa: 'bar'}
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        data: {foo: 'buz'}
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        data: {fun: 'bas'},
+        batchComplete: true
+      });
+    });
+
+    it('works with custom finalize short', function () {
+
+      const store = createStore(reducify(
+        {
+          "GRAPH": (state, action) => action
+        }
+        ), {},
+        applyMiddleware(batchMiddleware({
+          "GRAPH": true
+        }))
+      );
+
+      const expectedStates = [
+        {data: {fa: 'bar', foo: 'buz', fun: 'bas'}, hi: 'mom', type: 'GRAPH'}
+      ];
+
+      store.subscribe(() => {
+        const state = store.getState();
+        assert.deepEqual(state, expectedStates.shift());
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        data: {fa: 'bar'}
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        data: {foo: 'buz'}
+      });
+
+      store.dispatch({
+        type: 'GRAPH',
+        data: {fun: 'bas'},
+        batchComplete: state => ({...state, hi: 'mom'})
+      });
+    });
+
+
 
   });
 }
