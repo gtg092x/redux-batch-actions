@@ -199,6 +199,43 @@ store.dispatch({
 // Action is: {type: 'GRAPH', data: {foo: 'bar', fuz: 'bus'}}
 ```
 
+### Batch Purge
+
+Want to stop a batch from going out? Add `batchPurge` to an action and we'll clear it.
+
+```js
+import { createStore } from 'redux';
+import reducify from 'reducify';
+
+
+const store = createStore(
+  reducify({
+    "GRAPH": (state = 0, action) => action.data
+  }),
+  {},
+  applyMiddleware(batchMiddleware({
+    "GRAPH": true
+  }))
+);
+
+store.dispatch({
+   type: 'GRAPH',
+   data: {foo: 'bar'}   
+});
+
+store.dispatch({
+   type: 'GRAPH',
+   data: {fuz: 'bus'}
+});
+
+store.dispatch({
+   type: 'GRAPH',
+   batchPurge: true
+});
+
+// No Action fired on current tick or next
+```
+
 ### Configuration
 
 #### Tick

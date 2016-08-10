@@ -24,6 +24,7 @@ function config({tick: tickArg = getDefaultTick(), finalize = _.identity, ...opt
 
       const completeType = (type, toFinalize = finalize) => {
         const toBatch = queue[type];
+
         if (_.size(toBatch) === 0) {
           return;
         }

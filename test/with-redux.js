@@ -20,23 +20,37 @@ export default function () {
         }
       ), {},
         applyMiddleware(batchMiddleware({
-          "GRAPH": true
+          "GRAPH": true,
+          "GRAPHALT": true
         }))
       );
 
       const expectedStates = [
+        {},
         {fa: 'bar', foo: 'buz'},
         {fa: 'bar1', foo: 'buz2'}
       ];
 
       store.subscribe(() => {
         const state = store.getState();
-        assert.deepEqual(state, expectedStates.shift());
+        const toExpect = expectedStates.shift();
+        assert.deepEqual(state, toExpect);
       });
 
       store.dispatch({
         type: 'GRAPH',
         data: {fa: 'bar'}
+      });
+
+      store.dispatch({
+        type: 'GRAPHALT',
+        data: {fu: 2}
+      });
+
+      store.dispatch({
+        type: 'GRAPHALT',
+        data: {fa: 1},
+        batchComplete: true
       });
 
       store.dispatch({
