@@ -14,6 +14,7 @@ Batch [Redux][] actions.
 ```js
 import { createStore } from 'redux';
 import reducify from 'reducify';
+import batchMiddleware from 'redux-batch-actions';
 
 
 const store = createStore(
@@ -49,7 +50,7 @@ If you want to customize this, include it as a configuration with your middlewar
 ```js
 import { createStore } from 'redux';
 import reducify from 'reducify';
-
+import batchMiddleware from 'redux-batch-actions';
 
 const store = createStore(
   reducify({
@@ -105,7 +106,7 @@ If you don't include the action type when you configure your middleware, just in
 ```js
 import { createStore } from 'redux';
 import reducify from 'reducify';
-
+import batchMiddleware from 'redux-batch-actions';
 
 const store = createStore(
   reducify({
@@ -169,7 +170,7 @@ Want to ensure the batch fires synchronously? You'll need to dispatch the batche
 ```js
 import { createStore } from 'redux';
 import reducify from 'reducify';
-
+import batchMiddleware from 'redux-batch-actions';
 
 const store = createStore(
   reducify({
@@ -206,7 +207,7 @@ Want to stop a batch from going out? Add `batchPurge` to an action and we'll cle
 ```js
 import { createStore } from 'redux';
 import reducify from 'reducify';
-
+import batchMiddleware from 'redux-batch-actions';
 
 const store = createStore(
   reducify({
